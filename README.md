@@ -20,7 +20,7 @@ sgRNA library characterization small project
 - GENCODE v44 was used for comprehensive gene annotation, the gtf file can be found [here](https://www.gencodegenes.org/human/)
 - To wrap all the steps required from data processing, a simple snakemake pipeline was set up to:
 	1. run the mapping (**Task 1**) with Bowtie2 after creating the reference index,
-		- *techinical info*: mapping summary
+		- *technical info*: mapping summary
 		```shell
   		77736 reads; of these:
 		77736 (100.00%) were unpaired; of these:
