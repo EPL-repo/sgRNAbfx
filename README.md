@@ -20,9 +20,18 @@ sgRNA library characterization small project
 - GENCODE v44 was used for comprehensive gene annotation, the gtf file can be found [here](https://www.gencodegenes.org/human/)
 - To wrap all the steps required from data processing, a simple snakemake pipeline was set up to:
 	1. run the mapping (**Task 1**) with Bowtie2 after creating the reference index,
-	2. get chromosome name, start-end positions and strand for each mapped sgRNA sequence (**Task 2**),
-	3. assign gene names based on mapping results and compare the obtained annotation with gene names provided within description lines of fasta file (**Task 3**)
-	4. create a final output of unique, mapped gene names (official symbols) to be used in **Task 4**
+		- *techinical info*: mapping summary
+		```shell
+  		77736 reads; of these:
+		77736 (100.00%) were unpaired; of these:
+ 		499 (0.64%) aligned 0 times
+ 		53202 (68.44%) aligned exactly 1 time
+ 		24035 (30.92%) aligned >1 times
+  		99.36% overall alignment rate
+  		```
+	3. get chromosome name, start-end positions and strand for each mapped sgRNA sequence (**Task 2**),
+	4. assign gene names based on mapping results and compare the obtained annotation with gene names provided within description lines of fasta file (**Task 3**)
+	5. create a final output of unique, mapped gene names (official symbols) to be used in **Task 4**
 	
 **Snakefile** (stored in the [docker](docker/) folder)
 ```shell
