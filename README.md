@@ -19,10 +19,10 @@ sgRNA library characterization small project
 - In the context of mapping sgRNA sequences to the human genome, the necessity of using a splice-aware aligner depends on the specific requirements of the analysis. sgRNA sequences are typically short sequences designed to target specific genomic loci for CRISPR-Cas9 genome editing. These sequences are not inherently related to splicing events, which involve the removal of introns from pre-mRNA during the process of gene expression. As in the scope of this short we will not be working on assessing potential off-target effects or evaluating the specificity of sgRNA sequences (not enough information provided), it is not necessarily beneficial to use a splice-aware aligner. We will use **Bowtie2** which is very efficient on short DNA sequences, including sgRNAs [Haeussler  *et al*. *Genome Biol* 2016](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-016-1012-2)
 - GENCODE v44 was used for comprehensive gene annotation, the gtf file can be found [here](https://www.gencodegenes.org/human/)
 - To wrap all the steps required from data processing, a simple snakemake pipeline was set up to:
-	1. run the mapping (Task 1) with Bowtie2 after creating reference index,
-	2. get chromosome name, start-end positions and strand for each mapped sgRNA sequence (Task 2),
-	3. assign gene names based on mapping results and compare the obtained annotation with gene names provided within description lines of fasta file (Task 3)
-	4. create a final output of unique, mapped gene names (official symbols) to be used in Task 4
+	1. run the mapping (**Task 1**) with Bowtie2 after creating the reference index,
+	2. get chromosome name, start-end positions and strand for each mapped sgRNA sequence (**Task 2**),
+	3. assign gene names based on mapping results and compare the obtained annotation with gene names provided within description lines of fasta file (**Task 3**)
+	4. create a final output of unique, mapped gene names (official symbols) to be used in **Task 4**
 	
 **Snakefile**
 ```shell
@@ -49,6 +49,8 @@ rule bowtie2_align:
 
 
 ```
+
+**Important note: please keep in mind that all the code was created, run and tested on a MacOS Ventura (13.6.1) device**
 
 ## Create Docker image for the pipeline
 
