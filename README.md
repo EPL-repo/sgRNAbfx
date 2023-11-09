@@ -90,12 +90,12 @@ WORKDIR /workflow
 ```
 - Build the Docker Image
 ```shell
-docker build -t sgRNAlib_snakemake_image .
+docker build -t sgrnalib_snakemake_image .
 
 ```
 - Run the Docker Container
 ```shell
-docker run --rm -it -v /path/to/local/data/directory:/workflow/data sgRNAlib_snakemake_image
+docker run --rm -it -v /path/to/local/data/directory:/workflow/data sgrnalib_snakemake_image
 
 ```
 - Once inside the Docker container, execute the Snakemake pipeline
