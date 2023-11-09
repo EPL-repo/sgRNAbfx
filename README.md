@@ -62,6 +62,6 @@ rule bowtie2_align:
 ## R Jupyter Notebook to perform Task 4
 
 - It would have been possible to include another process within the Nextflow pipeline to run an R script allowing to retrieve a matrix of gene expression for the gene IDs from Task 3 for samples "TCGA-A7-A13D-01A-13R-A12P-07" and "TCGA-E9-A1RH-11A-34R-A169-07" of the TCGA-BRCA cohort (Task 4). However, to showcase another tool for collaborative work, an R Jupyter Notebook was created to show the steps required to accomplish the task.
-- The notebook as well as the outputs can be found in the folder [Task4_Jupyter](Task4_Jupyter/).
+- The notebook as well as the outputs can be found in the folder [Task4_Jupyter](Task4_Jupyter/). Please see the **TCGA-BRCA_sgRNA_gene_expression_matrix.html** output file for an interactive html table with the final expression matrix (columns can be sorted, specific genes can be looked for in the search bar) - useful result format to share with non-computational colleagues.
 - Expression data accessed from the GDC are stored in the [data](data/) folder (along with the manifest file).
 
