@@ -54,8 +54,45 @@ rule bowtie2_align:
 
 ## Create Docker image for the pipeline
 
-- First step is to create a Dockerfile with the following content:
+- If running on a MacOS, first make sure to install [Docker Desktop](https://docs.docker.com/desktop/install/mac-install/)
+- Create a Dockerfile with the following content (where data is your local input data directory - please modify accordingly):
+```shell
+FROM continuumio/miniconda3
 
+RUN conda install -c bioconda bowtie2 samtools bedtools
+
+RUN conda install -c conda-forge mamba
+
+RUN mamba install -c bioconda snakemake
+
+RUN mkdir /workflow
+COPY Snakefile /workflow/Snakefile
+
+# Create a directory in the container to store data
+RUN mkdir /workflow/data
+
+# Copy the necessary input data into the container
+COPY data/GRCh38.fa /workflow/data/GRCh38.fa
+COPY data/library.fa /workflow/data/library.fa
+COPY data/gencode.v44.annotation.gtf /workflow/data/gencode.v44.annotation.gtf
+
+WORKDIR /workflow
+
+```
+- Build the Docker Image
+```shell
+docker build -t sgRNAlib_snakemake_image .
+
+```
+- Run the Docker Container
+```shell
+docker run --rm -it -v /path/to/local/data/directory:/workflow/data sgRNAlib_snakemake_image
+
+```
+- Once inside the Docker container, execute the Snakemake pipeline
+```shell
+snakemake --cores all
+```
 
 **Important note: please keep in mind that all the code was created, run and tested on a MacOS Ventura (13.6.1) device**
 
