@@ -1,0 +1,71 @@
+# Snakefile for the pipeline
+
+# Set the paths and filenames
+reference_genome = "data/GRCh38/GRCh38.fa"
+input_sequences = "data/library.fa"
+output_sam = "sgRNAlib.sam"
+output_with_gene_names = "sequence_mapping_info_with_gene_names.txt"
+gene_annotation_file = "data/gencode.v44.annotation.gtf"
+unique_genes_output = "unique_gene_names.txt"
+
+rule all:
+    input: unique_genes_output
+
+rule bowtie2_build:
+    output: "GRCh38_index.1.bt2"
+    shell:
+        "bowtie2-build {reference_genome} GRCh38_index"
+
+rule bowtie2_align:
+    input: reference_genome, input_sequences
+    output: output_sam
+    shell:
+        "bowtie2 -x GRCh38_index -f {input[1]} -S {output}"
+
+rule sam_to_bam:
+    input: output_sam
+    output: "output.bam"
+    shell:
+        "samtools view -bS {input} > {output}"
+
+rule sort_bam:
+    input: "output.bam"
+    output: "sorted_output.bam"
+    shell:
+        "samtools sort {input} -o {output}"
+
+rule index_bam:
+    input: "sorted_output.bam"
+    output: "sorted_output.bam.bai"
+    shell:
+        "samtools index {input}"
+
+rule extract_gene_names:
+    input: gene_annotation_file
+    output: "genes_with_names.bed"
+    shell:
+        "gawk -F'\t' 'BEGIN {{OFS=\"\t\"}} $3 == \"gene\" {{ if (match($9, /gene_name \"([^\"]+)\"/, m)) {{ print $1, $4, $5, m[1] }} }}' {input} > {output}"
+
+rule bamtobed:
+    input: "sorted_output.bam"
+    output: "temp.bed"
+    shell:
+        "bedtools bamtobed -i {input} > {output}"
+
+rule intersect_bed:
+    input: "temp.bed", "genes_with_names.bed"
+    output: output_with_gene_names
+    shell:
+        "bedtools intersect -a {input[0]} -b {input[1]} -wa -wb | gawk -F '\\t' 'BEGIN {{OFS=\"\t\"; print \"Chromosome\", \"Start_Position\", \"End_Position\", \"Gene_Name\", \"Mapping_Info\", \"Gene_Info\"}} {{split($4, a, \"|\"); split(a[3], b, \"_\"); print $1, $2, $3, b[1], $5, $10}}' > {output}"
+
+rule add_true_false:
+    input: output_with_gene_names
+    output: "sequence_mapping_info_with_true_false.txt"
+    shell:
+        "awk -F'\t' 'BEGIN {{OFS=\"\t\"}} {{print $0, ($4 == $6) ? \"TRUE\" : \"FALSE\"}}' {input} > {output}"
+
+rule final_gene_list:
+    input: "sequence_mapping_info_with_true_false.txt"
+    output: unique_genes_output
+    shell:
+        "awk -F'\t' '$7 == \"TRUE\"' {input} | cut -f 4 | sort | uniq > {output}"
