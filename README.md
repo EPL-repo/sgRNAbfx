@@ -24,7 +24,7 @@ sgRNA library characterization small project
 	3. assign gene names based on mapping results and compare the obtained annotation with gene names provided within description lines of fasta file (**Task 3**)
 	4. create a final output of unique, mapped gene names (official symbols) to be used in **Task 4**
 	
-**Snakefile**
+**Snakefile** (stored in the [docker](docker/) folder)
 ```shell
 # Define the paths and filenames
 reference_genome = "data/GRCh38.fa"
@@ -55,7 +55,7 @@ rule bowtie2_align:
 ## Create Docker image for the pipeline
 
 - If running on a MacOS, first make sure to install [Docker Desktop](https://docs.docker.com/desktop/install/mac-install/)
-- Create a Dockerfile with the following content (where data is your local input data directory - please modify accordingly):
+- Create a Dockerfile (stored here in the [docker](docker/) folder) with the following content (where data is your local input data directory - please modify accordingly):
 ```shell
 FROM continuumio/miniconda3
 
